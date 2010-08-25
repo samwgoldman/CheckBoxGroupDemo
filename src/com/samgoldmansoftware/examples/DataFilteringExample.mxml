@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:components="com.samgoldmansoftware.components.*"
+		 creationComplete="creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+			
+			private function creationCompleteHandler(event:FlexEvent):void
+			{
+				numbers = new ArrayCollection();
+				numbers.disableAutoUpdate();
+				for (var i:Number = 1; i <= 1000; i++)
+				{
+					numbers.addItem(i);
+				}
+				numbers.enableAutoUpdate();
+				
+				numbers.filterFunction = factorFilter;
+			}
+			
+			private function factorFilter(number:Number):Boolean
+			{
+				if (selectedFactors.length)
+				{
+					for each (var factor:Number in selectedFactors)
+					{
+						if (number % factor != 0)
+						{
+							return false;
+						}
+					}
+				}
+				return true;
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:ArrayCollection id="numbers" />
+		<s:ArrayCollection id="factors" source="{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}" />
+		<s:ArrayCollection id="selectedFactors" collectionChange="{numbers.refresh()}" />
+	</fx:Declarations>
+	<s:layout>
+		<s:HorizontalLayout gap="10" paddingTop="10" paddingRight="10" paddingBottom="10" paddingLeft="10" />
+	</s:layout>
+	<components:CheckBoxGroup dataProvider="{factors}" selectedItems="{selectedFactors}" />
+	<s:List dataProvider="{numbers}" width="100%" height="100%" />
+</s:Group>
